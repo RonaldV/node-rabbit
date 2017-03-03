@@ -17,3 +17,19 @@ exports.recent = function (cb) {
     cb(err, docs);
   });
 };
+
+exports.findByType = function (type, cb) {
+  var collection = db.get().collection(collectionType);
+
+  collection.findOne({ type: type }, function (err, doc) {
+    cb(err, doc);
+  });
+};
+
+exports.updateByType = function (type, callCount, cb) {
+  var collection = db.get().collection(collectionType);
+
+  collection.updateOne({ type: type }, {$set: {callCount:callCount}}, {upsert:true}, function (err, r) {
+    cb(err, r);
+  });
+};

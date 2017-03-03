@@ -1,11 +1,31 @@
 var utils = require('./utils');
+var callstats = require('./models/callstats');
 
 var queue = 'jobs';
 
 // Worker (Consumer)
 function work(msg, cb) {
-  console.log("Got msg", msg.content.toString());
-  cb(true);
+  // TODO get and store call count with type consumer1
+  // TODO log the call count
+  callstats.findByType(jobs, function(err, stats) {
+    if (err) {
+      console.error("Mongo find ERROR: " + msg.content.toString(), err);
+      cb(true);
+    }
+    else {
+      var callCount = stats.callCount + 1;
+      callstats.updateByType(jobs, callCount, function(err, r) {
+        if (err) {
+          console.error("Mongo update ERROR: " + msg.content.toString(), err);
+          cb(true);
+        }
+        else {
+          console.log(callCount + " Got msg", msg.content.toString());
+          cb(true);
+        }
+      });
+    }
+  });
 }
 
 exports.queue = queue;
