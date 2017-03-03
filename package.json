@@ -1,0 +1,22 @@
+{
+  "name": "node-rabbit",
+  "version": "0.1.0",
+  "description": "Node.js RabbitMQ MongoDB",
+  "author": "First Last <first.last@example.com>",
+  "main": "reconnect.js",
+  "private": true,
+  "scripts": {
+    "start": "node rabbit-mongo.js",
+    "docker-build": "docker build --no-cache -t ronaldv/node-rabbit .",
+    "docker-run": "docker run --name nrabbit -d ronaldv/node-rabbit",
+    "docker-stop": "docker stop nrabbit && docker rm nrabbit",
+    "docker-clean": "docker rm -v $(docker ps -a -q -f status=exited) && docker rmi $(docker images -f \"dangling=true\" -q)",
+    "start-rabbitmq": "sudo ifconfig lo0 alias 10.200.10.1/24 && rabbitmq-server",
+    "start-mongodb": "mongod --dbpath=data"
+  },
+  "dependencies": {
+    "amqplib": "^0.5.1",
+    "dotenv": "4.0.0",
+    "mongodb": "^2.2.24"
+  }
+}
