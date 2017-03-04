@@ -7,14 +7,15 @@ var queue = 'jobs';
 function work(msg, cb) {
   // TODO get and store call count with type consumer1
   // TODO log the call count
-  callstats.findByType(jobs, function(err, stats) {
+  console.log("Got msg", msg.content.toString());
+  callstats.findByType(queue, function(err, stats) {
     if (err) {
       console.error("Mongo find ERROR: " + msg.content.toString(), err);
       cb(true);
     }
     else {
-      var callCount = stats.callCount + 1;
-      callstats.updateByType(jobs, callCount, function(err, r) {
+      var callCount = stats ? stats.callCount + 1 : 1;
+      callstats.updateByType(queue, callCount, function(err, r) {
         if (err) {
           console.error("Mongo update ERROR: " + msg.content.toString(), err);
           cb(true);
